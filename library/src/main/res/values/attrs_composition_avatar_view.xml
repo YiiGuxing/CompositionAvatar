@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="CompositionAvatarView">
+        <attr name="gap" format="float"/>
+    </declare-styleable>
+</resources>
