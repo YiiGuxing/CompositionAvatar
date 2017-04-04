@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import cn.yiiguxing.compositionavatar.CompositionAvatarView;
@@ -25,8 +26,21 @@ public class SampleActivity extends AppCompatActivity {
         ActivitySampleBinding binding = DataBindingUtil.setContentView(this,
                 R.layout.activity_sample);
 
+        gif(binding.gifUse);
+        svg(binding.svgUse);
         dynamicDrawables(binding.dynamicDrawables);
         dynamicGap(binding.dynamicGap);
+    }
+
+    private void gif(CompositionAvatarView view) {
+        BindingUtil.loadDrawable(view, R.drawable.image_1, R.drawable.galaxy, R.drawable.nebula);
+    }
+
+    private void svg(CompositionAvatarView view) {
+        AppCompatDrawableManager drawableManager = AppCompatDrawableManager.get();
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_cloud_circle));
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_album));
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_group_work));
     }
 
     @SuppressWarnings("deprecation")

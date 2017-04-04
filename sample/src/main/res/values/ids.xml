@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="composition_drawable_1" type="id"/>
+    <item name="composition_drawable_2" type="id"/>
+    <item name="composition_drawable_3" type="id"/>
+    <item name="composition_drawable_4" type="id"/>
+    <item name="composition_drawable_5" type="id"/>
+</resources>

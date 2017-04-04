@@ -14,13 +14,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:clipToPadding="false"
-        android:padding="20dp">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="20dp"
             tools:ignore="RtlHardcoded,HardcodedText">
 
             <LinearLayout
@@ -71,7 +71,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="35dp"
                 android:layout_marginTop="15dp"
                 android:background="#dddddd"/>
 
@@ -96,7 +96,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -108,8 +107,92 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="35dp"
                 android:background="#dddddd"/>
+
+            <cn.yiiguxing.compositionavatar.CompositionAvatarView
+                android:id="@+id/gifUse"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="#f0f0f0"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="动画"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginBottom="35dp"
+                android:background="#dddddd"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <cn.yiiguxing.compositionavatar.CompositionAvatarView
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:padding="3dp"
+                        app:drawables="@{Binding.getDrawables(@drawable/color_drawable_1,@drawable/color_drawable_2,@drawable/color_drawable_3,@drawable/color_drawable_4)}"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="#f0f0f0"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="状态(点击改变)"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:background="#dddddd"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <cn.yiiguxing.compositionavatar.CompositionAvatarView
+                        android:id="@+id/svgUse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="#f0f0f0"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="SVG"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:background="#dddddd"/>
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
