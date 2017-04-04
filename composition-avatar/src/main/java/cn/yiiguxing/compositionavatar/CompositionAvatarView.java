@@ -148,29 +148,25 @@ public class CompositionAvatarView extends View {
     }
 
     public void addDrawable(int id, @NonNull Drawable drawable) {
-        if (id != NO_ID) {
-            AvatarDrawable old = findAvatarDrawableById(id);
-            if (old != null) {
-                old.mDrawable.setCallback(null);
-                unscheduleDrawable(old.mDrawable);
+        AvatarDrawable old = id != NO_ID ? findAvatarDrawableById(id) : null;
+        if (old != null) {
+            old.mDrawable.setCallback(null);
+            unscheduleDrawable(old.mDrawable);
 
-                old.mDrawable = drawable;
-            }
+            old.mDrawable = drawable;
         } else {
             if (getNumberOfDrawables() >= MAX_DRAWABLE_COUNT) {
                 return;
             }
 
-            AvatarDrawable avatarDrawable = crateAvatarDrawable(id, drawable);
-            mDrawables.add(avatarDrawable);
+            mDrawables.add(crateAvatarDrawable(id, drawable));
+            layoutDrawables();
         }
 
         drawable.setCallback(this);
         if (drawable.isStateful()) {
             drawable.setState(getDrawableState());
         }
-
-        layoutDrawables();
     }
 
     private AvatarDrawable crateAvatarDrawable(int id, Drawable drawable) {
@@ -180,16 +176,13 @@ public class CompositionAvatarView extends View {
         return avatar;
     }
 
-    @Nullable
-    public Drawable removeDrawable(@NonNull Drawable drawable) {
+    public void removeDrawable(@NonNull Drawable drawable) {
         List<AvatarDrawable> drawables = this.mDrawables;
-        for (int i = 0; i < drawables.size(); i++) {
+        for (int i = drawables.size() - 1; i >= 0; i--) {
             if (drawables.get(i).mDrawable == drawable) {
-                return removeDrawableAt(i);
+                removeDrawableAt(i);
             }
         }
-
-        return null;
     }
 
     @Nullable
