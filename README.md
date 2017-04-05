@@ -19,7 +19,7 @@
   
   ![动画](./images/animation.gif)
 
-- Drawable状态（如点击状态）
+- Drawable状态（如点击状态）(selector)
   
   ![状态](./images/state.gif)
 
