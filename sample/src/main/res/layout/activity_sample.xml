@@ -173,7 +173,7 @@
                     android:orientation="vertical">
 
                     <cn.yiiguxing.compositionavatar.CompositionAvatarView
-                        android:id="@+id/svgUse"
+                        android:id="@+id/vectorUse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"/>
@@ -185,7 +185,7 @@
                         android:background="#f0f0f0"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="SVG"/>
+                        android:text="矢量"/>
 
                     <View
                         android:layout_width="match_parent"

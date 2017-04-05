@@ -27,20 +27,20 @@ public class SampleActivity extends AppCompatActivity {
                 R.layout.activity_sample);
 
         gif(binding.gifUse);
-        svg(binding.svgUse);
+        vector(binding.vectorUse);
         dynamicDrawables(binding.dynamicDrawables);
         dynamicGap(binding.dynamicGap);
     }
 
     private void gif(CompositionAvatarView view) {
-        BindingUtil.loadDrawable(view, R.drawable.image_1, R.drawable.galaxy, R.drawable.nebula);
+        BindingUtil.loadDrawable(view, R.drawable.galaxy, R.drawable.nebula, R.drawable.ambilight);
     }
 
-    private void svg(CompositionAvatarView view) {
+    private void vector(CompositionAvatarView view) {
         AppCompatDrawableManager drawableManager = AppCompatDrawableManager.get();
-        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_cloud_circle));
-        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_album));
-        view.addDrawable(drawableManager.getDrawable(this, R.drawable.svg_group_work));
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.cloud_circle));
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.album));
+        view.addDrawable(drawableManager.getDrawable(this, R.drawable.group_work));
     }
 
     @SuppressWarnings("deprecation")
