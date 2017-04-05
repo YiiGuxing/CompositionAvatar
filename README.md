@@ -1,5 +1,7 @@
 # CompositionAvatar
-Android composition avatar
+**Android composition avatar**
+
+仿QQ讨论组头像
 
 - 基础
   
