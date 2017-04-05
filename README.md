@@ -22,3 +22,7 @@
 - Drawable状态（如点击状态）
   
   ![状态](./images/state.gif)
+
+- 矢量图
+  
+  ![状态](./images/vector.png)
