@@ -1,4 +1,4 @@
-# CompositionAvatar
+# CompositionAvatar [![](https://jitpack.io/v/YiiGuxing/CompositionAvatar.svg)](https://jitpack.io/#YiiGuxing/CompositionAvatar)
 **Android composition avatar**
 
 仿QQ讨论组头像
