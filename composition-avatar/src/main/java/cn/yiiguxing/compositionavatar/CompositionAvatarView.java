@@ -55,7 +55,8 @@ public class CompositionAvatarView extends View {
     private void init(AttributeSet attrs, int defStyle) {
         final TypedArray a = getContext().obtainStyledAttributes(attrs,
                 R.styleable.CompositionAvatarView, defStyle, 0);
-        mGap = a.getFloat(R.styleable.CompositionAvatarView_gap, DEFAULT_GAP);
+        float gap = a.getFloat(R.styleable.CompositionAvatarView_gap, DEFAULT_GAP);
+        mGap = Math.max(0f, Math.min(gap, 1f));
         a.recycle();
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
