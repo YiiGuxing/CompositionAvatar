@@ -40,7 +40,7 @@
 2. 添加依赖:
    ```groovy
    dependencies {
-     compile 'com.github.User:Repo:Tag'
+     compile 'com.github.YiiGuxing:CompositionAvatar:v1.0.0'
    }
    ```
 3. 在 `xml` 上使用:
