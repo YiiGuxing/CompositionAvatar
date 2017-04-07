@@ -75,6 +75,11 @@ public final class BindingUtil {
 
         @Override
         public void getSize(SizeReadyCallback cb) {
+            // FIXME 这里为了图方面，直接加载原图了，生产环境上应该是高和宽都取mView.getDrawableSize()。
+            // 但是这里直接取的话也不一定能取到正确的值，所以建义在
+            // android.view.ViewTreeObserver.OnPreDrawListener中做处理。
+            // 另外，DrawableSize会因图片数量改变而改变，所以建义异步加载图像之前
+            // 应当先设置占位图。如果图片的数量是动态可变的的话，也建义做针对性处理。
             cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
         }
 
