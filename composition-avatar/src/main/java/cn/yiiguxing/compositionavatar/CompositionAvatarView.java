@@ -24,6 +24,7 @@ import java.util.List;
 public class CompositionAvatarView extends View {
 
     public static final int MAX_DRAWABLE_COUNT = 5;
+    public static final float DEFAULT_GAP = 0.25f;
 
     private final List<AvatarDrawable> mDrawables = new ArrayList<>(MAX_DRAWABLE_COUNT);
     private final Paint mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -34,7 +35,7 @@ public class CompositionAvatarView extends View {
     private float mSteinerCircleRadius;
     private float mOffsetY;
 
-    private float mGap = 0.25f;
+    private float mGap = DEFAULT_GAP;
 
     public CompositionAvatarView(Context context) {
         super(context);
@@ -54,7 +55,7 @@ public class CompositionAvatarView extends View {
     private void init(AttributeSet attrs, int defStyle) {
         final TypedArray a = getContext().obtainStyledAttributes(attrs,
                 R.styleable.CompositionAvatarView, defStyle, 0);
-        mGap = a.getFloat(R.styleable.CompositionAvatarView_gap, mGap);
+        mGap = a.getFloat(R.styleable.CompositionAvatarView_gap, DEFAULT_GAP);
         a.recycle();
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
