@@ -26,3 +26,29 @@
 - 矢量图
   
   ![状态](./images/vector.png)
+
+### 使用
+1. 添加 JitPack 仓库地址到项目构建文件 - [`build.gradle`](./build.gradle):
+   ```groovy
+   allprojects {
+	 	 repositories {
+	 		 ...
+	 		 maven { url 'https://jitpack.io' }
+	 	 }
+	 }
+   ```
+2. 添加依赖:
+   ```groovy
+   dependencies {
+		 compile 'com.github.User:Repo:Tag'
+	 }
+   ```
+3. 在 `xml` 上使用:
+   ```xml
+   <cn.yiiguxing.compositionavatar.CompositionAvatarView
+	     xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="100dp"
+       android:layout_height="wrap_content"
+       app:gap="0.25"/>
+       <!-- 默认gap为0.25 -->
+   ```
