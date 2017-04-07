@@ -51,4 +51,6 @@
        android:layout_height="wrap_content"
        app:gap="0.25"/>
        <!-- 默认gap为0.25 -->
-   ```
+   ```
+
+详细请看 [`sample`](./sample)
