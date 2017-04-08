@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -32,21 +33,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1)}"/>
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1)}"/>
 
                 <cn.yiiguxing.compositionavatar.CompositionAvatarView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2)}"/>
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2)}"/>
 
                 <cn.yiiguxing.compositionavatar.CompositionAvatarView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3)}"/>
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3)}"/>
             </LinearLayout>
 
             <LinearLayout
@@ -59,13 +60,13 @@
                     android:layout_width="0dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4)}"/>
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4)}"/>
 
                 <cn.yiiguxing.compositionavatar.CompositionAvatarView
                     android:layout_width="0dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4,@drawable/image_5)}"/>
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4,@drawable/image_5)}"/>
             </LinearLayout>
 
             <View
@@ -91,8 +92,8 @@
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_weight="1"
-                    app:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4,@drawable/image_5)}"
-                    app:gap="0.0"/>
+                    app:gap="0.0"
+                    bind:drawables="@{Binding.getDrawables(@drawable/image_1,@drawable/image_2,@drawable/image_3,@drawable/image_4,@drawable/image_5)}"/>
             </LinearLayout>
 
             <TextView
@@ -148,7 +149,7 @@
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:padding="3dp"
-                        app:drawables="@{Binding.getDrawables(@drawable/color_drawable_1,@drawable/color_drawable_2,@drawable/color_drawable_3,@drawable/color_drawable_4)}"/>
+                        bind:drawables="@{Binding.getDrawables(@drawable/color_drawable_1,@drawable/color_drawable_2,@drawable/color_drawable_3,@drawable/color_drawable_4)}"/>
 
                     <TextView
                         android:layout_width="match_parent"
