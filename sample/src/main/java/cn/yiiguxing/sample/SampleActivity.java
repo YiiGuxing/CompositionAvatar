@@ -33,7 +33,7 @@ public class SampleActivity extends AppCompatActivity {
     }
 
     private void gif(CompositionAvatarView view) {
-        BindingUtil.loadDrawable(view, R.drawable.galaxy, R.drawable.nebula, R.drawable.ambilight);
+        BindingUtil.loadDrawable(view, R.drawable.ambilight, R.drawable.nebula, R.drawable.galaxy);
     }
 
     private void vector(CompositionAvatarView view) {
