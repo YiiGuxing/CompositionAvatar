@@ -129,28 +129,30 @@ public class CompositionAvatarView extends View {
         return null;
     }
 
-    @Nullable
+    @NonNull
     public Drawable getDrawableAt(int index) {
         return mDrawables.get(index).mDrawable;
     }
 
     @Nullable
     private AvatarDrawable findAvatarDrawableById(int id) {
-        for (AvatarDrawable drawable : mDrawables) {
-            if (drawable.mId == id) {
-                return drawable;
+        if (id != NO_ID) {
+            for (AvatarDrawable drawable : mDrawables) {
+                if (drawable.mId == id) {
+                    return drawable;
+                }
             }
         }
 
         return null;
     }
 
-    public void addDrawable(@NonNull Drawable drawable) {
-        addDrawable(NO_ID, drawable);
+    public boolean addDrawable(@NonNull Drawable drawable) {
+        return addDrawable(NO_ID, drawable);
     }
 
-    public void addDrawable(int id, @NonNull Drawable drawable) {
-        AvatarDrawable old = id != NO_ID ? findAvatarDrawableById(id) : null;
+    public boolean addDrawable(int id, @NonNull Drawable drawable) {
+        AvatarDrawable old = findAvatarDrawableById(id);
         if (old != null) {
             old.mDrawable.setCallback(null);
             unscheduleDrawable(old.mDrawable);
@@ -158,7 +160,7 @@ public class CompositionAvatarView extends View {
             old.mDrawable = drawable;
         } else {
             if (getNumberOfDrawables() >= MAX_DRAWABLE_COUNT) {
-                return;
+                return false;
             }
 
             mDrawables.add(crateAvatarDrawable(id, drawable));
@@ -169,6 +171,8 @@ public class CompositionAvatarView extends View {
         if (drawable.isStateful()) {
             drawable.setState(getDrawableState());
         }
+
+        return true;
     }
 
     private AvatarDrawable crateAvatarDrawable(int id, Drawable drawable) {
@@ -205,6 +209,13 @@ public class CompositionAvatarView extends View {
         unscheduleDrawable(drawable.mDrawable);
         layoutDrawables();
         return drawable.mDrawable;
+    }
+
+    public void clearDrawable() {
+        if (!mDrawables.isEmpty()) {
+            mDrawables.clear();
+            layoutDrawables();
+        }
     }
 
     private void layoutDrawables() {
