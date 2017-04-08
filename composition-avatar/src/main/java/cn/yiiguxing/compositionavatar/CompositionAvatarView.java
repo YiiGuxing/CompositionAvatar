@@ -21,6 +21,11 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CompositionAvatarView
+ *
+ * @author Yii.Guxing
+ */
 public class CompositionAvatarView extends View {
 
     public static final int MAX_DRAWABLE_COUNT = 5;
@@ -96,6 +101,11 @@ public class CompositionAvatarView extends View {
         setMeasuredDimension(width, height);
     }
 
+    /**
+     * Set the gap value.
+     *
+     * @param gap the gap
+     */
     public void setGap(@FloatRange(from = 0.f, to = 1.f) float gap) {
         gap = Math.max(0f, Math.min(gap, 1f));
         if (mGap != gap) {
@@ -104,20 +114,35 @@ public class CompositionAvatarView extends View {
         }
     }
 
+    /**
+     * @return the gap
+     */
     @FloatRange(from = 0.f, to = 1.f)
     public float getGap() {
         return mGap;
     }
 
+    /**
+     * @return drawable数量
+     */
     @IntRange(from = 0, to = MAX_DRAWABLE_COUNT)
     public int getNumberOfDrawables() {
         return mDrawables.size();
     }
 
+    /**
+     * @return drawable的大小（高等于宽）
+     */
     public int getDrawableSize() {
         return Math.round(mSteinerCircleRadius * 2);
     }
 
+    /**
+     * 通过ID获取对应的drawable.
+     *
+     * @param id the id.
+     * @return the drawable.
+     */
     @Nullable
     public Drawable findDrawableById(int id) {
         for (AvatarDrawable drawable : mDrawables) {
@@ -129,6 +154,12 @@ public class CompositionAvatarView extends View {
         return null;
     }
 
+    /**
+     * 通过索引获取对应的drawable.
+     *
+     * @param index 索引
+     * @return the drawable.
+     */
     @NonNull
     public Drawable getDrawableAt(int index) {
         return mDrawables.get(index).mDrawable;
@@ -147,10 +178,24 @@ public class CompositionAvatarView extends View {
         return null;
     }
 
+    /**
+     * 添加drawable.
+     *
+     * @param drawable the drawable.
+     * @return <code>true</code> - 如果添加成功， <code>false</code> - 其他
+     * @see #addDrawable(int, Drawable)
+     */
     public boolean addDrawable(@NonNull Drawable drawable) {
         return addDrawable(NO_ID, drawable);
     }
 
+    /**
+     * 添加drawable, 如果id已经存在, drawable将会被替换
+     *
+     * @param id       the drawable id.
+     * @param drawable the drawable.
+     * @return <code>true</code> - 如果添加成功， <code>false</code> - 其他
+     */
     public boolean addDrawable(int id, @NonNull Drawable drawable) {
         AvatarDrawable old = findAvatarDrawableById(id);
         if (old != null) {
@@ -182,6 +227,13 @@ public class CompositionAvatarView extends View {
         return avatar;
     }
 
+    /**
+     * 移除drawable.
+     *
+     * @param drawable the drawable.
+     * @see #removeDrawableAt(int)
+     * @see #removeDrawableById(int)
+     */
     public void removeDrawable(@NonNull Drawable drawable) {
         List<AvatarDrawable> drawables = this.mDrawables;
         for (int i = drawables.size() - 1; i >= 0; i--) {
@@ -191,6 +243,14 @@ public class CompositionAvatarView extends View {
         }
     }
 
+    /**
+     * 通过id移除drawable.
+     *
+     * @param id the id.
+     * @return 被移除的drawable，<code>null</code> - 如果id不存在。
+     * @see #removeDrawableAt(int)
+     * @see #removeDrawable(Drawable)
+     */
     @Nullable
     public Drawable removeDrawableById(int id) {
         List<AvatarDrawable> drawables = this.mDrawables;
@@ -203,6 +263,18 @@ public class CompositionAvatarView extends View {
         return null;
     }
 
+    /**
+     * 通过索引移除drawable.
+     *
+     * @param index 索引
+     * @return 被移除的drawable
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &lt; 0 || index &gt;= getNumberOfDrawables()</tt>)
+     * @see #getNumberOfDrawables()
+     * @see #removeDrawable(Drawable)
+     * @see #removeDrawableById(int)
+     */
+    @NonNull
     public Drawable removeDrawableAt(int index) {
         AvatarDrawable drawable = mDrawables.remove(index);
         drawable.mDrawable.setCallback(null);
@@ -211,6 +283,9 @@ public class CompositionAvatarView extends View {
         return drawable.mDrawable;
     }
 
+    /**
+     * 移除所有的drawable.
+     */
     public void clearDrawable() {
         if (!mDrawables.isEmpty()) {
             mDrawables.clear();
@@ -230,6 +305,7 @@ public class CompositionAvatarView extends View {
         final int N = drawables.size();
         float center = mContentSize / 2.f;
         if (mContentSize > 0 && N > 0) {
+            // 图像圆的半径。
             final float r;
             if (N == 1) {
                 r = mContentSize / 2.f;
@@ -241,6 +317,7 @@ public class CompositionAvatarView extends View {
                 r = (float) (mContentSize / (2 * (2 * Math.sin(((N - 2) * Math.PI)
                         / (2 * N)) + 1)));
                 final double sinN = Math.sin(Math.PI / N);
+                // 以所有图像圆为内切圆的圆的半径
                 final float R = (float) (r * ((sinN + 1) / sinN));
                 mOffsetY = (float)
                         ((mContentSize - R - r * (1 + 1 / Math.tan(Math.PI / N))) / 2f);
@@ -272,6 +349,7 @@ public class CompositionAvatarView extends View {
                 pointsTemp[0] = startX;
                 pointsTemp[1] = startY;
                 if (i > 0) {
+                    // 以上一个圆的圆心旋转计算得出当前圆的圆位置
                     matrix.postRotate(360.f / N, center, center + mOffsetY);
                     matrix.mapPoints(pointsTemp);
                 }
