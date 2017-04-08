@@ -36,6 +36,7 @@ public final class BindingUtil {
      * drawable id，用于标识drawable，以便通过此id找到或者替换drawable。
      *
      * @see CompositionAvatarView#addDrawable(int, Drawable)
+     * @see CompositionAvatarView#findDrawableById(int) (int, Drawable)
      */
     private static final int[] DRAWABLE_IDS = {
             R.id.composition_drawable_1,
