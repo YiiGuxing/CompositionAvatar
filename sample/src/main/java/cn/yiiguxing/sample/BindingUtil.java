@@ -36,7 +36,7 @@ public final class BindingUtil {
      * drawable id，用于标识drawable，以便通过此id找到或者替换drawable。
      *
      * @see CompositionAvatarView#addDrawable(int, Drawable)
-     * @see CompositionAvatarView#findDrawableById(int) (int, Drawable)
+     * @see CompositionAvatarView#findDrawableById(int)
      */
     private static final int[] DRAWABLE_IDS = {
             R.id.composition_drawable_1,
@@ -52,15 +52,15 @@ public final class BindingUtil {
      * @param view   the view
      * @param resIds 图片资源ID
      */
-    static void loadDrawable(CompositionAvatarView view, int... resIds) {
+    static void asyncLoadDrawable(CompositionAvatarView view, int... resIds) {
         int length = Math.min(resIds.length, CompositionAvatarView.MAX_DRAWABLE_COUNT);
         for (int i = 0; i < length; i++) {
-            // 图片布局的顺序是按添加的顺序以顺时针方向布局的，所以可以添加点位图以固定布局顺序
+            // 图片布局的顺序是按添加的顺序以顺时针方向布局的，所以可以添加点位图以固定图片的显示顺序
             view.addDrawable(DRAWABLE_IDS[i], new ColorDrawable(0xffdddddd));
             Glide.with(view.getContext())
                     .fromResource()
                     .load(resIds[i])
-                    // .placeholder(new ColorDrawable(0xffdddddd)) // 由于异步，这里并不能保证布局的顺序
+                    // .placeholder(new ColorDrawable(0xffdddddd)) // 由于异步，这里并不能保证显示的顺序
                     .into(new CompositionAvatarViewTarget(view, DRAWABLE_IDS[i]));
         }
     }
