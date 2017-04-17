@@ -340,10 +340,10 @@ public class CompositionAvatarView extends View {
                 AvatarDrawable drawable = drawables.get(i);
                 drawable.reset();
 
-                drawable.haveGap = i > 0;
-                if (drawable.haveGap) {
-                    drawable.gapCenterX = pointsTemp[0];
-                    drawable.gapCenterY = pointsTemp[1];
+                drawable.mHasGap = i > 0;
+                if (drawable.mHasGap) {
+                    drawable.mGapCenterX = pointsTemp[0];
+                    drawable.mGapCenterY = pointsTemp[1];
                 }
 
                 pointsTemp[0] = startX;
@@ -354,13 +354,13 @@ public class CompositionAvatarView extends View {
                     matrix.mapPoints(pointsTemp);
                 }
 
-                drawable.centerX = pointsTemp[0];
-                drawable.centerY = pointsTemp[1];
+                drawable.mCenterX = pointsTemp[0];
+                drawable.mCenterY = pointsTemp[1];
 
                 drawable.mBounds.inset(-r, -r);
-                drawable.mBounds.offset(drawable.centerX, drawable.centerY);
+                drawable.mBounds.offset(drawable.mCenterX, drawable.mCenterY);
 
-                drawable.mMaskPath.addCircle(drawable.centerX, drawable.centerY, r,
+                drawable.mMaskPath.addCircle(drawable.mCenterX, drawable.mCenterY, r,
                         Path.Direction.CW);
                 drawable.mMaskPath.setFillType(Path.FillType.INVERSE_WINDING);
             }
@@ -368,9 +368,9 @@ public class CompositionAvatarView extends View {
             if (N > 2) {
                 AvatarDrawable first = drawables.get(0);
                 AvatarDrawable last = drawables.get(N - 1);
-                first.haveGap = true;
-                first.gapCenterX = last.centerX;
-                first.gapCenterY = last.centerY;
+                first.mHasGap = true;
+                first.mGapCenterX = last.mCenterX;
+                first.mGapCenterY = last.mCenterY;
             }
 
             mSteinerCircleRadius = r;
@@ -425,8 +425,8 @@ public class CompositionAvatarView extends View {
             drawable.mDrawable.draw(canvas);
 
             canvas.drawPath(drawable.mMaskPath, maskPaint);
-            if (drawable.haveGap && mGap > 0f) {
-                canvas.drawCircle(drawable.gapCenterX, drawable.gapCenterY, gapRadius, maskPaint);
+            if (drawable.mHasGap && mGap > 0f) {
+                canvas.drawCircle(drawable.mGapCenterX, drawable.mGapCenterY, gapRadius, maskPaint);
             }
 
             canvas.restoreToCount(savedLayer);
@@ -472,20 +472,20 @@ public class CompositionAvatarView extends View {
     private static class AvatarDrawable {
         int mId = View.NO_ID;
         Drawable mDrawable;
-        float centerX;
-        float centerY;
-        float gapCenterX;
-        float gapCenterY;
-        boolean haveGap;
+        float mCenterX;
+        float mCenterY;
+        float mGapCenterX;
+        float mGapCenterY;
+        boolean mHasGap;
         final RectF mBounds = new RectF();
         final Path mMaskPath = new Path();
 
         void reset() {
-            centerX = 0;
-            centerY = 0;
-            gapCenterX = 0;
-            gapCenterY = 0;
-            haveGap = false;
+            mCenterX = 0;
+            mCenterY = 0;
+            mGapCenterX = 0;
+            mGapCenterY = 0;
+            mHasGap = false;
             mBounds.setEmpty();
             mMaskPath.reset();
         }
