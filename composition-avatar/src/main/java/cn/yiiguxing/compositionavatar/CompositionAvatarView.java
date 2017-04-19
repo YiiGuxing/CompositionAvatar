@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -178,6 +179,16 @@ public class CompositionAvatarView extends View {
         return null;
     }
 
+    private boolean hasSameDrawable(Drawable drawable) {
+        for (AvatarDrawable d : mDrawables) {
+            if (d.mDrawable == drawable) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * 添加drawable.
      *
@@ -199,10 +210,11 @@ public class CompositionAvatarView extends View {
     public boolean addDrawable(int id, @NonNull Drawable drawable) {
         AvatarDrawable old = findAvatarDrawableById(id);
         if (old != null) {
-            old.mDrawable.setCallback(null);
-            unscheduleDrawable(old.mDrawable);
-
+            Drawable d = old.mDrawable;
             old.mDrawable = drawable;
+            if (!hasSameDrawable(d)) {
+                cleanDrawable(d);
+            }
         } else {
             if (getNumberOfDrawables() >= MAX_DRAWABLE_COUNT) {
                 return false;
@@ -213,8 +225,12 @@ public class CompositionAvatarView extends View {
         }
 
         drawable.setCallback(this);
+        drawable.setVisible(getVisibility() == VISIBLE, true);
         if (drawable.isStateful()) {
             drawable.setState(getDrawableState());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            drawable.setLayoutDirection(getLayoutDirection());
         }
 
         return true;
@@ -277,8 +293,9 @@ public class CompositionAvatarView extends View {
     @NonNull
     public Drawable removeDrawableAt(int index) {
         AvatarDrawable drawable = mDrawables.remove(index);
-        drawable.mDrawable.setCallback(null);
-        unscheduleDrawable(drawable.mDrawable);
+        if (!hasSameDrawable(drawable.mDrawable)) {
+            cleanDrawable(drawable.mDrawable);
+        }
         layoutDrawables();
         return drawable.mDrawable;
     }
@@ -289,12 +306,16 @@ public class CompositionAvatarView extends View {
     public void clearDrawable() {
         if (!mDrawables.isEmpty()) {
             for (AvatarDrawable drawable : mDrawables) {
-                drawable.mDrawable.setCallback(null);
-                unscheduleDrawable(drawable.mDrawable);
+                cleanDrawable(drawable.mDrawable);
             }
             mDrawables.clear();
             layoutDrawables();
         }
+    }
+
+    private void cleanDrawable(Drawable drawable) {
+        drawable.setCallback(null);
+        unscheduleDrawable(drawable);
     }
 
     private void layoutDrawables() {
@@ -438,6 +459,30 @@ public class CompositionAvatarView extends View {
     }
 
     @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        for (AvatarDrawable drawable : mDrawables) {
+            drawable.mDrawable.setVisible(visibility == VISIBLE, false);
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        for (AvatarDrawable drawable : mDrawables) {
+            drawable.mDrawable.setVisible(getVisibility() == VISIBLE, false);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        for (AvatarDrawable drawable : mDrawables) {
+            drawable.mDrawable.setVisible(false, false);
+        }
+    }
+
+    @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
 
@@ -471,6 +516,11 @@ public class CompositionAvatarView extends View {
             }
         }
         super.invalidateDrawable(drawable);
+    }
+
+    @Override
+    public CharSequence getAccessibilityClassName() {
+        return CompositionAvatarView.class.getName();
     }
 
     private static class AvatarDrawable {
