@@ -288,6 +288,10 @@ public class CompositionAvatarView extends View {
      */
     public void clearDrawable() {
         if (!mDrawables.isEmpty()) {
+            for (AvatarDrawable drawable : mDrawables) {
+                drawable.mDrawable.setCallback(null);
+                unscheduleDrawable(drawable.mDrawable);
+            }
             mDrawables.clear();
             layoutDrawables();
         }
