@@ -32,8 +32,8 @@ public class CompositionAvatarView extends View {
     public static final int MAX_DRAWABLE_COUNT = 5;
     public static final float DEFAULT_GAP = 0.25f;
 
-    private final List<AvatarDrawable> mDrawables = new ArrayList<>(MAX_DRAWABLE_COUNT);
-    private final Paint mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final List<DrawableInfo> mDrawables = new ArrayList<>(MAX_DRAWABLE_COUNT);
+    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Matrix mLayoutMatrix = new Matrix();
     private final float[] mPointsTemp = new float[2];
 
@@ -67,8 +67,8 @@ public class CompositionAvatarView extends View {
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
 
-        mMaskPaint.setColor(Color.BLACK);
-        mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        mPaint.setColor(Color.BLACK);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
         initForEditMode();
     }
@@ -76,8 +76,8 @@ public class CompositionAvatarView extends View {
     private void initForEditMode() {
         if (!isInEditMode()) return;
 
-        mMaskPaint.setXfermode(null);
-        mMaskPaint.setColor(0xff0577fc);
+        mPaint.setXfermode(null);
+        mPaint.setColor(0xff0577fc);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class CompositionAvatarView extends View {
      */
     @Nullable
     public Drawable findDrawableById(int id) {
-        for (AvatarDrawable drawable : mDrawables) {
+        for (DrawableInfo drawable : mDrawables) {
             if (drawable.mId == id) {
                 return drawable.mDrawable;
             }
@@ -167,9 +167,9 @@ public class CompositionAvatarView extends View {
     }
 
     @Nullable
-    private AvatarDrawable findAvatarDrawableById(int id) {
+    private DrawableInfo findAvatarDrawableById(int id) {
         if (id != NO_ID) {
-            for (AvatarDrawable drawable : mDrawables) {
+            for (DrawableInfo drawable : mDrawables) {
                 if (drawable.mId == id) {
                     return drawable;
                 }
@@ -180,7 +180,7 @@ public class CompositionAvatarView extends View {
     }
 
     private boolean hasSameDrawable(Drawable drawable) {
-        for (AvatarDrawable d : mDrawables) {
+        for (DrawableInfo d : mDrawables) {
             if (d.mDrawable == drawable) {
                 return true;
             }
@@ -208,7 +208,7 @@ public class CompositionAvatarView extends View {
      * @return <code>true</code> - 如果添加成功， <code>false</code> - 其他
      */
     public boolean addDrawable(int id, @NonNull Drawable drawable) {
-        AvatarDrawable old = findAvatarDrawableById(id);
+        DrawableInfo old = findAvatarDrawableById(id);
         if (old != null) {
             Drawable d = old.mDrawable;
             old.mDrawable = drawable;
@@ -237,8 +237,8 @@ public class CompositionAvatarView extends View {
         return true;
     }
 
-    private AvatarDrawable crateAvatarDrawable(int id, Drawable drawable) {
-        AvatarDrawable avatar = new AvatarDrawable();
+    private DrawableInfo crateAvatarDrawable(int id, Drawable drawable) {
+        DrawableInfo avatar = new DrawableInfo();
         avatar.mId = id;
         avatar.mDrawable = drawable;
         return avatar;
@@ -252,7 +252,7 @@ public class CompositionAvatarView extends View {
      * @see #removeDrawableById(int)
      */
     public void removeDrawable(@NonNull Drawable drawable) {
-        List<AvatarDrawable> drawables = this.mDrawables;
+        List<DrawableInfo> drawables = this.mDrawables;
         for (int i = drawables.size() - 1; i >= 0; i--) {
             if (drawables.get(i).mDrawable == drawable) {
                 removeDrawableAt(i);
@@ -270,7 +270,7 @@ public class CompositionAvatarView extends View {
      */
     @Nullable
     public Drawable removeDrawableById(int id) {
-        List<AvatarDrawable> drawables = this.mDrawables;
+        List<DrawableInfo> drawables = this.mDrawables;
         for (int i = 0; i < drawables.size(); i++) {
             if (drawables.get(i).mId == id) {
                 return removeDrawableAt(i);
@@ -293,7 +293,7 @@ public class CompositionAvatarView extends View {
      */
     @NonNull
     public Drawable removeDrawableAt(int index) {
-        AvatarDrawable drawable = mDrawables.remove(index);
+        DrawableInfo drawable = mDrawables.remove(index);
         if (!hasSameDrawable(drawable.mDrawable)) {
             cleanDrawable(drawable.mDrawable);
         }
@@ -306,7 +306,7 @@ public class CompositionAvatarView extends View {
      */
     public void clearDrawable() {
         if (!mDrawables.isEmpty()) {
-            for (AvatarDrawable drawable : mDrawables) {
+            for (DrawableInfo drawable : mDrawables) {
                 cleanDrawable(drawable.mDrawable);
             }
             mDrawables.clear();
@@ -327,14 +327,14 @@ public class CompositionAvatarView extends View {
         int height = getHeight() - getPaddingTop() - getPaddingBottom();
 
         mContentSize = Math.min(width, height);
-        final List<AvatarDrawable> drawables = mDrawables;
+        final List<DrawableInfo> drawables = mDrawables;
         final int N = drawables.size();
-        float center = mContentSize / 2.f;
+        float center = mContentSize * .5f;
         if (mContentSize > 0 && N > 0) {
             // 图像圆的半径。
             final float r;
             if (N == 1) {
-                r = mContentSize / 2.f;
+                r = mContentSize * .5f;
             } else if (N == 2) {
                 r = (float) (mContentSize / (2 + 2 * Math.sin(Math.PI / 4)));
             } else if (N == 4) {
@@ -363,7 +363,7 @@ public class CompositionAvatarView extends View {
             matrix.reset();
 
             for (int i = 0; i < drawables.size(); i++) {
-                AvatarDrawable drawable = drawables.get(i);
+                DrawableInfo drawable = drawables.get(i);
                 drawable.reset();
 
                 drawable.mHasGap = i > 0;
@@ -392,8 +392,8 @@ public class CompositionAvatarView extends View {
             }
 
             if (N > 2) {
-                AvatarDrawable first = drawables.get(0);
-                AvatarDrawable last = drawables.get(N - 1);
+                DrawableInfo first = drawables.get(0);
+                DrawableInfo last = drawables.get(N - 1);
                 first.mHasGap = true;
                 first.mGapCenterX = last.mCenterX;
                 first.mGapCenterY = last.mCenterY;
@@ -415,7 +415,7 @@ public class CompositionAvatarView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        final List<AvatarDrawable> drawables = mDrawables;
+        final List<DrawableInfo> drawables = mDrawables;
         final int N = drawables.size();
 
         if (!isInEditMode() && (mContentSize <= 0 || N <= 0)) {
@@ -433,15 +433,15 @@ public class CompositionAvatarView extends View {
 
         if (isInEditMode()) {
             float cr = Math.min(width, height) * .5f;
-            canvas.drawCircle(cr, cr, cr, mMaskPaint);
+            canvas.drawCircle(cr, cr, cr, mPaint);
             return;
         }
 
         canvas.translate(0, mOffsetY);
 
-        final Paint maskPaint = mMaskPaint;
+        final Paint paint = mPaint;
         final float gapRadius = mSteinerCircleRadius * (mGap + 1f);
-        for (AvatarDrawable drawable : drawables) {
+        for (DrawableInfo drawable : drawables) {
             RectF bounds = drawable.mBounds;
             final int savedLayer = canvas.saveLayer(0, 0, mContentSize, mContentSize,
                     null, Canvas.ALL_SAVE_FLAG);
@@ -450,9 +450,9 @@ public class CompositionAvatarView extends View {
                     Math.round(bounds.right), Math.round(bounds.bottom));
             drawable.mDrawable.draw(canvas);
 
-            canvas.drawPath(drawable.mMaskPath, maskPaint);
+            canvas.drawPath(drawable.mMaskPath, paint);
             if (drawable.mHasGap && mGap > 0f) {
-                canvas.drawCircle(drawable.mGapCenterX, drawable.mGapCenterY, gapRadius, maskPaint);
+                canvas.drawCircle(drawable.mGapCenterX, drawable.mGapCenterY, gapRadius, paint);
             }
 
             canvas.restoreToCount(savedLayer);
@@ -485,7 +485,7 @@ public class CompositionAvatarView extends View {
 
     private void updateVisible() {
         boolean isVisible = getWindowVisibility() == VISIBLE && isShown();
-        for (AvatarDrawable drawable : mDrawables) {
+        for (DrawableInfo drawable : mDrawables) {
             drawable.mDrawable.setVisible(isVisible, false);
         }
     }
@@ -493,7 +493,7 @@ public class CompositionAvatarView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        for (AvatarDrawable drawable : mDrawables) {
+        for (DrawableInfo drawable : mDrawables) {
             drawable.mDrawable.setVisible(false, false);
         }
     }
@@ -503,7 +503,7 @@ public class CompositionAvatarView extends View {
         super.drawableStateChanged();
 
         boolean invalidate = false;
-        for (AvatarDrawable drawable : mDrawables) {
+        for (DrawableInfo drawable : mDrawables) {
             Drawable d = drawable.mDrawable;
             if (d.isStateful() && d.setState(getDrawableState())) {
                 invalidate = true;
@@ -518,7 +518,7 @@ public class CompositionAvatarView extends View {
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
-        for (AvatarDrawable drawable : mDrawables) {
+        for (DrawableInfo drawable : mDrawables) {
             drawable.mDrawable.jumpToCurrentState();
         }
     }
@@ -542,7 +542,7 @@ public class CompositionAvatarView extends View {
         return CompositionAvatarView.class.getName();
     }
 
-    private static class AvatarDrawable {
+    private static class DrawableInfo {
         int mId = View.NO_ID;
         Drawable mDrawable;
         float mCenterX;
@@ -562,7 +562,6 @@ public class CompositionAvatarView extends View {
             mBounds.setEmpty();
             mMaskPath.reset();
         }
-
     }
 
 }
