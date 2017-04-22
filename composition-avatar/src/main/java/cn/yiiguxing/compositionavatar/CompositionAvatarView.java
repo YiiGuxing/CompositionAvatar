@@ -225,13 +225,14 @@ public class CompositionAvatarView extends View {
         }
 
         drawable.setCallback(this);
-        drawable.setVisible(getVisibility() == VISIBLE, true);
+        drawable.setVisible(getWindowVisibility() == VISIBLE && isShown(), true);
         if (drawable.isStateful()) {
             drawable.setState(getDrawableState());
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             drawable.setLayoutDirection(getLayoutDirection());
         }
+        invalidate();
 
         return true;
     }
@@ -461,16 +462,31 @@ public class CompositionAvatarView extends View {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        for (AvatarDrawable drawable : mDrawables) {
-            drawable.mDrawable.setVisible(visibility == VISIBLE, false);
-        }
+        updateVisible();
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        updateVisible();
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        updateVisible();
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        updateVisible();
+    }
+
+    private void updateVisible() {
+        boolean isVisible = getWindowVisibility() == VISIBLE && isShown();
         for (AvatarDrawable drawable : mDrawables) {
-            drawable.mDrawable.setVisible(getVisibility() == VISIBLE, false);
+            drawable.mDrawable.setVisible(isVisible, false);
         }
     }
 
@@ -508,14 +524,17 @@ public class CompositionAvatarView extends View {
     }
 
     @Override
+    protected boolean verifyDrawable(@NonNull Drawable drawable) {
+        return hasSameDrawable(drawable) || super.verifyDrawable(drawable);
+    }
+
+    @Override
     public void invalidateDrawable(@NonNull Drawable drawable) {
-        for (AvatarDrawable d : mDrawables) {
-            if (d.mDrawable == drawable) {
-                invalidate();
-                return;
-            }
+        if (hasSameDrawable(drawable)) {
+            invalidate();
+        } else {
+            super.invalidateDrawable(drawable);
         }
-        super.invalidateDrawable(drawable);
     }
 
     @Override
