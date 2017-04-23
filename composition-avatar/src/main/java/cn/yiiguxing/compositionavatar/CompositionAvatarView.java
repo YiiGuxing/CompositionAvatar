@@ -441,7 +441,8 @@ public class CompositionAvatarView extends View {
 
         final Paint paint = mPaint;
         final float gapRadius = mSteinerCircleRadius * (mGap + 1f);
-        for (DrawableInfo drawable : drawables) {
+        for (int i = 0; i < drawables.size(); i++) {
+            DrawableInfo drawable = drawables.get(i);
             RectF bounds = drawable.mBounds;
             final int savedLayer = canvas.saveLayer(0, 0, mContentSize, mContentSize,
                     null, Canvas.ALL_SAVE_FLAG);
