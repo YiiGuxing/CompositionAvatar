@@ -180,8 +180,9 @@ public class CompositionAvatarView extends View {
     }
 
     private boolean hasSameDrawable(Drawable drawable) {
-        for (DrawableInfo d : mDrawables) {
-            if (d.mDrawable == drawable) {
+        List<DrawableInfo> drawables = this.mDrawables;
+        for (int i = 0; i < drawables.size(); i++) {
+            if (drawables.get(i).mDrawable == drawable) {
                 return true;
             }
         }
