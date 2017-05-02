@@ -49,7 +49,9 @@
        xmlns:app="http://schemas.android.com/apk/res-auto"
        android:layout_width="100dp"
        android:layout_height="wrap_content"
+       app:fitType="CENTER"
        app:gap="0.25"/>
+       <!-- 默认fitType为CENTER -->
        <!-- 默认gap为0.25 -->
    ```
    

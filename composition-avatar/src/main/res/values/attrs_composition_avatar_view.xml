@@ -1,5 +1,11 @@
 <resources>
     <declare-styleable name="CompositionAvatarView">
         <attr name="gap" format="float"/>
+        <attr name="fitType" format="enum">
+            <enum name="FIT" value="0"/>
+            <enum name="CENTER" value="1"/>
+            <enum name="START" value="2"/>
+            <enum name="END" value="3"/>
+        </attr>
     </declare-styleable>
 </resources>

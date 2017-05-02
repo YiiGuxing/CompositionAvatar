@@ -10,7 +10,6 @@ import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.SquaringDrawable;
 import com.bumptech.glide.request.target.Target;
 
 import cn.yiiguxing.compositionavatar.CompositionAvatarView;
@@ -121,9 +120,6 @@ public final class BindingUtil {
         @Override
         public void onResourceReady(GlideDrawable resource,
                                     GlideAnimation<? super GlideDrawable> glideAnimation) {
-            if (!resource.isAnimated()) {
-                resource = new SquaringDrawable(resource, mView.getDrawableSize());
-            }
             this.mResource = resource;
             setDrawable(resource);
             resource.setLoopCount(GlideDrawable.LOOP_FOREVER);

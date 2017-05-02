@@ -35,13 +35,22 @@ public class CompositionAvatarView extends View {
     private final List<DrawableInfo> mDrawables = new ArrayList<>(MAX_DRAWABLE_COUNT);
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Matrix mLayoutMatrix = new Matrix();
+    private final RectF mTempBounds = new RectF();
     private final float[] mPointsTemp = new float[2];
 
     private int mContentSize;
     private float mSteinerCircleRadius;
     private float mOffsetY;
 
+    private FitType mFitType = FitType.CENTER;
     private float mGap = DEFAULT_GAP;
+
+    private static final FitType[] sFitTypeArray = {
+            FitType.FIT,
+            FitType.CENTER,
+            FitType.START,
+            FitType.END,
+    };
 
     public CompositionAvatarView(Context context) {
         super(context);
@@ -61,6 +70,12 @@ public class CompositionAvatarView extends View {
     private void init(AttributeSet attrs, int defStyle) {
         final TypedArray a = getContext().obtainStyledAttributes(attrs,
                 R.styleable.CompositionAvatarView, defStyle, 0);
+
+        int index = a.getInt(R.styleable.CompositionAvatarView_fitType, -1);
+        if (index >= 0) {
+            setDrawableFitType(sFitTypeArray[index]);
+        }
+
         float gap = a.getFloat(R.styleable.CompositionAvatarView_gap, DEFAULT_GAP);
         mGap = Math.max(0f, Math.min(gap, 1f));
         a.recycle();
@@ -136,6 +151,44 @@ public class CompositionAvatarView extends View {
      */
     public int getDrawableSize() {
         return Math.round(mSteinerCircleRadius * 2);
+    }
+
+    /**
+     * Drawable填充类型
+     */
+    public enum FitType {
+        FIT,
+        CENTER,
+        START,
+        END
+    }
+
+    /**
+     * 设置Drawable填充类型
+     *
+     * @param fitType Drawable填充类型
+     * @see FitType
+     */
+    public void setDrawableFitType(@NonNull FitType fitType) {
+        //noinspection ConstantConditions
+        if (fitType == null) {
+            throw new NullPointerException();
+        }
+        if (mFitType != fitType) {
+            mFitType = fitType;
+            for (DrawableInfo drawableInfo : mDrawables) {
+                updateDrawableBounds(drawableInfo);
+            }
+            invalidate();
+        }
+    }
+
+    /**
+     * @return Drawable填充类型
+     */
+    @NonNull
+    public FitType getFitType() {
+        return mFitType;
     }
 
     /**
@@ -216,6 +269,7 @@ public class CompositionAvatarView extends View {
             if (!hasSameDrawable(d)) {
                 cleanDrawable(d);
             }
+            updateDrawableBounds(old);
         } else {
             if (getNumberOfDrawables() >= MAX_DRAWABLE_COUNT) {
                 return false;
@@ -350,6 +404,8 @@ public class CompositionAvatarView extends View {
                         ((mContentSize - R - r * (1 + 1 / Math.tan(Math.PI / N))) / 2f);
             }
 
+            mSteinerCircleRadius = r;
+
             final float startX, startY;
             if (N % 2 == 0) {
                 startX = startY = r;
@@ -384,8 +440,7 @@ public class CompositionAvatarView extends View {
                 drawable.mCenterX = pointsTemp[0];
                 drawable.mCenterY = pointsTemp[1];
 
-                drawable.mBounds.inset(-r, -r);
-                drawable.mBounds.offset(drawable.mCenterX, drawable.mCenterY);
+                updateDrawableBounds(drawable);
 
                 drawable.mMaskPath.addCircle(drawable.mCenterX, drawable.mCenterY, r,
                         Path.Direction.CW);
@@ -399,11 +454,48 @@ public class CompositionAvatarView extends View {
                 first.mGapCenterX = last.mCenterX;
                 first.mGapCenterY = last.mCenterY;
             }
-
-            mSteinerCircleRadius = r;
         }
 
         invalidate();
+    }
+
+    private void updateDrawableBounds(DrawableInfo drawableInfo) {
+        final Drawable drawable = drawableInfo.mDrawable;
+
+        final float radius = mSteinerCircleRadius;
+        if (radius <= 0) {
+            drawable.setBounds(0, 0, 0, 0);
+            return;
+        }
+
+
+        final int dWidth = drawable.getIntrinsicWidth();
+        final int dHeight = drawable.getIntrinsicHeight();
+
+        final RectF bounds = mTempBounds;
+        bounds.setEmpty();
+
+        if (dWidth <= 0 || dHeight <= 0 || dWidth == dHeight || FitType.FIT == mFitType) {
+            bounds.inset(-radius, -radius);
+        } else {
+            float scale;
+            if (dWidth > dHeight) {
+                scale = radius / (float) dHeight;
+            } else {
+                scale = radius / (float) dWidth;
+            }
+            bounds.inset(-dWidth * scale, -dHeight * scale);
+
+            if (FitType.START == mFitType || FitType.END == mFitType) {
+                int dir = FitType.START == mFitType ? 1 : -1;
+                bounds.offset((bounds.width() * 0.5f - radius) * dir,
+                        (bounds.height() * 0.5f - radius) * dir);
+            }
+        }
+
+        bounds.offset(drawableInfo.mCenterX, drawableInfo.mCenterY);
+        drawable.setBounds((int) bounds.left, (int) bounds.top,
+                Math.round(bounds.right), Math.round(bounds.bottom));
     }
 
     @Override
@@ -444,12 +536,9 @@ public class CompositionAvatarView extends View {
         final float gapRadius = mSteinerCircleRadius * (mGap + 1f);
         for (int i = 0; i < drawables.size(); i++) {
             DrawableInfo drawable = drawables.get(i);
-            RectF bounds = drawable.mBounds;
             final int savedLayer = canvas.saveLayer(0, 0, mContentSize, mContentSize,
                     null, Canvas.ALL_SAVE_FLAG);
 
-            drawable.mDrawable.setBounds((int) bounds.left, (int) bounds.top,
-                    Math.round(bounds.right), Math.round(bounds.bottom));
             drawable.mDrawable.draw(canvas);
 
             canvas.drawPath(drawable.mMaskPath, paint);
@@ -552,7 +641,6 @@ public class CompositionAvatarView extends View {
         float mGapCenterX;
         float mGapCenterY;
         boolean mHasGap;
-        final RectF mBounds = new RectF();
         final Path mMaskPath = new Path();
 
         void reset() {
@@ -561,7 +649,6 @@ public class CompositionAvatarView extends View {
             mGapCenterX = 0;
             mGapCenterY = 0;
             mHasGap = false;
-            mBounds.setEmpty();
             mMaskPath.reset();
         }
     }
