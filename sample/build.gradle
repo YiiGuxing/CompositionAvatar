@@ -1,13 +1,16 @@
-apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+}
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 31
+    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "cn.yiiguxing.sample"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -31,11 +34,13 @@ android {
 
 //noinspection SpellCheckingInspection
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':composition-avatar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':composition-avatar')
     // compile 'com.github.YiiGuxing:CompositionAvatar:latest.release'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }

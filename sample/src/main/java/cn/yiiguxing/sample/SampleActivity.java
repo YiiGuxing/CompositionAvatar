@@ -2,13 +2,15 @@ package cn.yiiguxing.sample;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
-import android.databinding.DataBindingUtil;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatDrawableManager;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import cn.yiiguxing.compositionavatar.CompositionAvatarView;
@@ -36,6 +38,7 @@ public class SampleActivity extends AppCompatActivity {
         BindingUtil.asyncLoadDrawable(view, R.drawable.ambilight, R.drawable.nebula, R.drawable.galaxy);
     }
 
+    @SuppressLint("RestrictedApi")
     private void vector(CompositionAvatarView view) {
         AppCompatDrawableManager drawableManager = AppCompatDrawableManager.get();
         view.addDrawable(drawableManager.getDrawable(this, R.drawable.cloud_circle));
