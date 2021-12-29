@@ -1,6 +1,6 @@
 package cn.yiiguxing.sample;
 
-import android.databinding.BindingAdapter;
+import androidx.databinding.BindingAdapter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
